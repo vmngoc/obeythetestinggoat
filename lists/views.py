@@ -18,7 +18,7 @@ def view_list(request, list_id):
     items = Item.objects.filter(list=list_)
     return render(
         request, 'list.html',
-        {'items': items, 'list': list_}
+        {'list': list_}
     )
 
 def add_item(request, list_id):
