@@ -91,6 +91,24 @@ class NewVisitorTest(LiveServerTestCase):
 
         # Satisfied, she goes back to sleep.
 
+    def test_can_delete_an_existing_item(self):
+        # Edith goes to check out its homepage.
+        self.browser.get(self.live_server_url)
+
+        # She enter a new item
+        self.enter_a_new_item('Buy peacock feathers')
+
+        # The homepage updates and now shows this first item
+        self.check_for_row_in_list_table('1. Buy peacock feathers')
+
+        # She goes to buy peacock feathers, so now she deletes the item
+        delete_link = self.browser.find_element_by_tag_name('a')
+        delete_link.click();
+
+        # Now the list no longer shows the item she has just deleted
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+
     def test_layout_and_styling(self):
         # She goes to check out its homepage.
         self.browser.set_window_size(1024, 768)

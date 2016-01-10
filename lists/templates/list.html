@@ -9,8 +9,10 @@
       {% csrf_token %}
     </form>
     <table id="id_list_table">
-      {% for item in list.item_set.all %} # reverse lookup in Django ORM for 1-to-many rlts
-      <tr><td>{{ forloop.counter }}. {{ item.text }}</td></tr>
+      {% for item in list.item_set.all %} <!--reverse lookup in Django ORM for 1-to-many rlts-->
+      <tr>
+        <td>{{ forloop.counter }}. {{ item.text }} <a href="/lists/items/{{ item.id }}/delete">Delete</a></td>
+      </tr>
       {% endfor %}
     </table>
   </body>
