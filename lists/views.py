@@ -3,7 +3,6 @@ from django.http import HttpResponse
 from lists.models import Item, List
 
 # Create your views here.
-# a function that does nothing
 def home_page(request):
     return render(request, 'home.html')
     # render: takes a path, gives html back
