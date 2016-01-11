@@ -3,10 +3,9 @@ from django.http import HttpResponse
 from lists.models import Item, List
 
 # Create your views here.
-# a function that does nothing
 def home_page(request):
     return render(request, 'home.html')
-    #render: takes a path, gives html back
+    # render: takes a path, gives html back
 
 def new_list(request):
     new_list = List.objects.create()
@@ -24,4 +23,12 @@ def view_list(request, list_id):
 def add_item(request, list_id):
     list_ = List.objects.get(id=list_id)
     Item.objects.create(text=request.POST['item_text'], list=list_)
+    return redirect('/lists/%d/' % (list_.id,))
+
+def delete_item(request, item_id):
+    item_ = Item.objects.get(id=item_id)
+    list_ = item_.list
+
+    item_.delete()
+
     return redirect('/lists/%d/' % (list_.id,))

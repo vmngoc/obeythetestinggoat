@@ -53,7 +53,7 @@ class NewVisitorTest(TodoFunctionalTest):
         self.browser.get(self.live_server_url)
         page_text = self.browser.find_element_by_tag_name('body').text
         self.assertNotIn('Buy peacock feathers', page_text)
-        self.assertNotIn('make a fly', page_text)
+        self.assertNotIn('Use peacock feathers to make fly', page_text)
 
         #Francis starts a new list by entering a new item
         #He is less interesting than Edith
@@ -70,3 +70,41 @@ class NewVisitorTest(TodoFunctionalTest):
         self.assertIn('Buy milk', page_text)
 
         # Satisfied, she goes back to sleep.
+
+    def test_can_delete_an_existing_item(self):
+        # Edith goes to check out its homepage.
+        self.browser.get(self.live_server_url)
+
+        # She enter a new item
+        self.enter_a_new_item('Buy peacock feathers')
+
+        # The homepage updates and now shows this first item
+        self.check_for_row_in_list_table('1. Buy peacock feathers')
+
+        # She goes to buy peacock feathers, so now she deletes the item
+        delete_link = self.browser.find_element_by_tag_name('a')
+        delete_link.click();
+
+        # Now the list no longer shows the item she has just deleted
+        page_text = self.browser.find_element_by_tag_name('body').text
+        self.assertNotIn('Buy peacock feathers', page_text)
+
+    def test_layout_and_styling(self):
+        # She goes to check out its homepage.
+        self.browser.set_window_size(1024, 768)
+        self.browser.get(self.live_server_url)
+
+        # She notices that the input box is nicely centered
+        self.check_input_box_is_centered()
+
+        # She starts a new list
+        self.enter_a_new_item('testing')
+        self.check_input_box_is_centered()
+
+    def check_input_box_is_centered(self):
+        inputbox = self.browser.find_element_by_id('id_new_item')
+        self.assertAlmostEqual(
+            inputbox.location['x'] + (inputbox.size['width']/2),
+            512,
+            delta=5
+        )

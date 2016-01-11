@@ -76,6 +76,32 @@ class NewItemTest(TestCase):
 
         self.assertRedirects(response,'/lists/%d/' % (correct_list.id,))
 
+class DeleteItemTest(TestCase):
+    def test_can_delete_an_existing_item(self):
+        new_list = List.objects.create()
+        self.client.post(
+            '/lists/%d/add_item' % (new_list.id,),
+            data={'item_text': 'A new item for an existing list'}
+        )
+
+        new_item = Item.objects.first()
+        self.client.get('/lists/items/%d/delete' % (new_item.id,))
+
+        self.assertEqual(Item.objects.count(), 0)
+
+    def test_delete_redirects_to_list_view(self):
+        new_list = List.objects.create()
+
+        self.client.post(
+            '/lists/%d/add_item' % (new_list.id,),
+            data={'item_text': 'A new item for an existing list'}
+        )
+
+        new_item = Item.objects.first()
+        response = self.client.get('/lists/items/%d/delete' % (new_item.id,))
+
+        self.assertRedirects(response,'/lists/%d/' % (new_list.id,))
+
 class ListViewTest(TestCase):
     def test_uses_list_template(self):
         new_list = List.objects.create()
